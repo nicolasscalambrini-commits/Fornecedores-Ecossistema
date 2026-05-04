@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Base de Fornecedores · Sankhya Suprimentos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --green:#66cc66;--navy:#2e3c50;--gd:#5e9343;
+  --bg:#f4f5f7;--white:#fff;--border:#e0e0e0;--gray:#F2F0EF;
+  --ink2:#5a6a7a;--ink3:#9aa5b0;
+  --warn:#d29922;--red:#c0392b;
+  --shadow:0 1px 4px rgba(46,60,80,.09),0 4px 16px rgba(46,60,80,.06);
+  --shadow-lg:0 8px 32px rgba(46,60,80,.14);
+}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--navy);font-size:14px;}
+
+/* HEADER */
+.header{background:var(--navy);height:58px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.25);}
+.logo{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.3px;display:flex;align-items:center;gap:10px;}
+.logo em{color:var(--green);font-style:normal;}
+.logo-div{width:1px;height:26px;background:rgba(255,255,255,.2);}
+.logo-mod{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.hbadge{background:rgba(102,204,102,.15);border:1px solid rgba(102,204,102,.3);color:var(--green);font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;}
+.hcount{font-size:12px;color:rgba(255,255,255,.45);font-weight:600;}
+
+/* NAV */
+.nav{background:var(--white);border-bottom:3px solid var(--green);padding:0 28px;display:flex;}
+.ntab{padding:12px 20px;cursor:pointer;color:var(--ink2);font-size:13px;font-weight:700;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.5px;}
+.ntab:hover{color:var(--navy);}
+.ntab.active{color:var(--gd);border-bottom-color:var(--gd);}
+.ntab-cnt{background:var(--gray);color:var(--ink2);font-size:10px;font-weight:800;padding:1px 7px;border-radius:10px;}
+.ntab.active .ntab-cnt{background:rgba(94,147,67,.15);color:var(--gd);}
+
+/* MAIN */
+.main{padding:26px 28px 80px;max-width:1500px;margin:0 auto;}
+.hidden{display:none!important;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a3a4a 0%,#2e3c50 50%,#1a5050 100%);border-radius:12px;padding:22px 28px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;right:-20px;top:-20px;width:160px;height:160px;border-radius:50%;background:rgba(102,204,102,.07);pointer-events:none;}
+.hero-title{font-size:21px;font-weight:800;color:#fff;margin-bottom:3px;}
+.hero-sub{font-size:12px;color:rgba(255,255,255,.55);}
+.hero-slogan{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-top:8px;}
+.hero-actions{display:flex;gap:10px;z-index:1;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);}
+.stat.s2::before{background:var(--gd);} .stat.s3::before{background:var(--warn);} .stat.s4::before{background:var(--navy);}
+.stat-icon{font-size:22px;margin-bottom:5px;}
+.stat-num{font-size:32px;font-weight:800;line-height:1;color:var(--navy);margin-bottom:3px;}
+.stat-label{font-size:12px;color:var(--ink2);font-weight:600;}
+.stat.clickable{cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.stat.clickable:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(46,60,80,.13);}
+.stat.clickable.active{border-color:var(--green);box-shadow:0 0 0 2px var(--green);}
+.stat.s2.clickable.active{border-color:var(--gd);box-shadow:0 0 0 2px var(--gd);}
+.stat.s3.clickable.active{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn);}
+.stat-hint{font-size:10px;color:var(--ink3);margin-top:5px;font-weight:600;}
+
+/* AI BAR */
+.ai-bar{background:var(--navy);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:10px;align-items:center;}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite;box-shadow:0 0 0 0 rgba(102,204,102,.5);}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(102,204,102,.4)}70%{box-shadow:0 0 0 8px rgba(102,204,102,0)}100%{box-shadow:0 0 0 0 rgba(102,204,102,0)}}
+.ai-lbl{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
+.ai-inp{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(102,204,102,.25);border-radius:7px;padding:8px 13px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:#fff;outline:none;}
+.ai-inp::placeholder{color:rgba(255,255,255,.3);}
+.ai-inp:focus{border-color:var(--green);}
+.ai-res{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:8px;padding:13px 16px;font-size:13px;line-height:1.75;color:var(--navy);white-space:pre-wrap;margin-bottom:14px;}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
+.srch{flex:1;min-width:260px;position:relative;}
+.srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;}
+.srch input{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px 8px 36px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--navy);outline:none;}
+.srch input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(102,204,102,.12);}
+.fsel{background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--navy);outline:none;cursor:pointer;}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-family:'Nunito Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px;}
+.btn-primary{background:var(--green);color:var(--navy);} .btn-primary:hover{background:#55bb55;}
+.btn-navy{background:var(--navy);color:#fff;} .btn-navy:hover{background:#1e2d3d;}
+.btn-ghost{background:var(--white);color:var(--navy);border:1.5px solid var(--border);} .btn-ghost:hover{border-color:var(--navy);}
+
+/* TABLE */
+.table-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);}
+.tbar{background:var(--navy);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;}
+.tbar-title{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:2px;}
+.tbar-cnt{font-size:11px;color:rgba(255,255,255,.5);}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:9px 13px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2);border-bottom:2px solid var(--gray);background:#fafafa;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--gray);cursor:pointer;transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(102,204,102,.06);}
+tbody td{padding:11px 13px;vertical-align:middle;font-size:12px;}
+.cell-fantasia{font-weight:800;font-size:13px;color:var(--navy);}
+.cell-rs{font-size:10px;color:var(--ink3);margin-top:1px;display:block;font-weight:600;}
+.cell-cnpj{font-size:10px;color:var(--ink3);font-weight:600;}
+.chip{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.cg{background:rgba(94,147,67,.12);color:var(--gd);}
+.cw{background:rgba(210,153,34,.12);color:var(--warn);}
+.cr{background:rgba(192,57,43,.1);color:var(--red);}
+.cb{background:rgba(46,60,80,.08);color:var(--navy);}
+.item-tags{display:flex;flex-direction:column;gap:3px;}
+.itag-line{font-size:12px;color:var(--ink2);line-height:1.4;display:flex;align-items:baseline;gap:5px;}
+.itag-bullet{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px;}
+.itag-more{display:inline-block;font-size:10px;font-weight:700;color:var(--gd);background:rgba(94,147,67,.1);padding:2px 8px;border-radius:10px;margin-top:3px;cursor:default;}
+.prod-cell{max-width:320px;}
+
+/* PANEL */
+.panel-ov{position:fixed;inset:0;background:rgba(46,60,80,.42);z-index:60;display:none;}
+.panel-ov.open{display:block;}
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:450px;background:var(--white);border-left:3px solid var(--green);z-index:61;overflow-y:auto;box-shadow:-4px 0 24px rgba(46,60,80,.18);animation:sIn .25s ease;display:none;}
+.side-panel.open{display:block;}
+@keyframes sIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.ph{background:var(--navy);padding:20px 22px;position:relative;}
+.ph::after{content:'';display:block;height:3px;background:var(--green);position:absolute;bottom:0;left:0;right:0;}
+.ph-fantasia{font-size:20px;font-weight:800;color:var(--green);margin-bottom:2px;margin-right:30px;line-height:1.2;}
+.ph-rs{font-size:12px;color:rgba(255,255,255,.6);margin-right:30px;}
+.ph-cnpj{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px;font-weight:600;}
+.ph-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);width:27px;height:27px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.ph-close:hover{color:#fff;}
+.pb{padding:20px;}
+.ps{margin-bottom:18px;}
+.ps-t{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(--gd);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid rgba(94,147,67,.2);}
+.pr{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;font-size:12px;gap:8px;}
+.pr .k{color:var(--ink2);white-space:nowrap;flex-shrink:0;} .pr .v{font-weight:700;color:var(--navy);text-align:right;word-break:break-word;}
+.prod-list{font-size:11px;color:var(--ink2);line-height:1.7;max-height:130px;overflow-y:auto;background:var(--gray);border-radius:6px;padding:8px 10px;}
+.panel-actions{display:flex;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:var(--shadow-lg);z-index:200;border-left:4px solid var(--green);animation:tin .25s ease;}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--gray);} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--navy);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span>SAN<em>KHYA</em></span>
+    <div class="logo-div"></div>
+    <span class="logo-mod">Suprimentos</span>
+  </div>
+  <div class="header-right">
+    <div class="hbadge">Coordenação</div>
+    <div class="hcount" id="hcount">64 fornecedores</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="ntab active" onclick="showTab('base',this)">📋 Base de Fornecedores <span class="ntab-cnt" id="tc-base">64</span></div>
+  <div class="ntab" onclick="showTab('inclusao',this)">➕ Incluir Fornecedor</div>
+  <div class="ntab" onclick="showTab('fluxo',this)">⚡ Fluxo de Inclusão</div>
+</div>
+
+<!-- ═══ TAB BASE ═══ -->
+<div id="tab-base" class="main">
+
+  <div class="hero">
+    <div>
+      <div class="hero-title">Base de Fornecedores</div>
+      <div class="hero-sub">64 fornecedores · importados das NF-e de entrada · Março/2025</div>
+      <div class="hero-slogan">Liberdade para evoluir.</div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="showTab('inclusao',document.querySelectorAll('.ntab')[1])">+ Novo Fornecedor</button>
+      <button class="btn" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.15)" onclick="exportCSV()">⬇ Exportar CSV</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat clickable" id="sc-all" onclick="filterByCard('')"><div class="stat-icon">🏢</div><div class="stat-num" id="s1">64</div><div class="stat-label">Total de Fornecedores</div><div class="stat-hint">clique para ver todos</div></div>
+    <div class="stat s2 clickable" id="sc-ativo" onclick="filterByCard('Ativo')"><div class="stat-icon">✅</div><div class="stat-num" id="s2" style="color:var(--gd)">0</div><div class="stat-label">Ativos</div><div class="stat-hint">clique para filtrar</div></div>
+    <div class="stat s3 clickable" id="sc-analise" onclick="filterByCard('Em análise')"><div class="stat-icon">⏳</div><div class="stat-num" id="s3" style="color:var(--warn)">0</div><div class="stat-label">Em Análise</div><div class="stat-hint">clique para filtrar</div></div>
+    <div class="stat s4"><div class="stat-icon">🗂️</div><div class="stat-num" id="s4" style="color:var(--navy)">0</div><div class="stat-label">Categorias</div></div>
+  </div>
+
+  <!-- AI -->
+  <div class="ai-bar">
+    <div class="ai-dot"></div>
+    <span class="ai-lbl">IA ✦</span>
+    <input class="ai-inp" id="aiQ" placeholder='Pergunte em linguagem natural — ex: "fornecedores de TI" ou "quem fornece café?"' onkeydown="if(event.key==='Enter')runAI()">
+    <button class="btn btn-primary" style="padding:8px 14px;font-size:12px" onclick="runAI()">Buscar</button>
+  </div>
+  <div class="ai-res hidden" id="aiRes"></div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="srch">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="srchI" placeholder="Buscar por nome, CNPJ, produto, NCM ou cidade..." oninput="filterTable()">
+    </div>
+    <select class="fsel" id="fCat" onchange="filterTable()"><option value="">Todas as categorias</option><option>Alimentação / Alimentos Preparados</option>
+<option>Alimentação / Café e Insumos</option>
+<option>Alimentação / Distribuição</option>
+<option>Alimentação / Hotelaria e Refeição</option>
+<option>Alimentação / Panificação</option>
+<option>Alimentação / Refeições e Alimentos</option>
+<option>Alimentação / Refeições e Coffee Break</option>
+<option>Alimentação / Refrigerante</option>
+<option>Brindes / Metais</option>
+<option>Brindes / Presentes e Kits</option>
+<option>Brindes / Troféus e Acrílico</option>
+<option>Embalagens</option>
+<option>Facilities / Decoração e Paisagismo</option>
+<option>Higiene / Perfumaria</option>
+<option>Limpeza / Facilities e Saneamento</option>
+<option>Manutenção / Materiais de Construção</option>
+<option>Material de Escritório / Armarinhos</option>
+<option>Papelaria / Etiquetas</option>
+<option>Papelaria / Livros e Treinamentos</option>
+<option>Saúde / Medicamentos e Higiene</option>
+<option>Tecnologia / E-commerce e Eletrônicos</option>
+<option>Tecnologia / Eletroeletrônicos</option>
+<option>Tecnologia / TI e Informática</option>
+<option>Vestuário / Confecções e Tecidos</option>
+<option>Vestuário / Uniformes e EPIs</option></select>
+    <select class="fsel" id="fUF" onchange="filterTable()">
+      <option value="">Todos os estados</option>
+      <option>MG</option><option>SP</option><option>DF</option><option>ES</option><option>PR</option><option>PE</option>
+    </select>
+    <select class="fsel" id="fSt" onchange="filterTable()">
+      <option value="">Todos os status</option>
+      <option>Ativo</option><option>Em análise</option>
+    </select>
+    <button class="btn btn-ghost" onclick="exportCSV()">⬇ Exportar CSV</button>
+    <button class="btn btn-navy" onclick="showTab('inclusao',document.querySelectorAll('.ntab')[1])">+ Novo</button>
+  </div>
+
+  <div class="table-card">
+    <div class="tbar">
+      <div class="tbar-title">Fornecedores cadastrados</div>
+      <div class="tbar-cnt" id="tRes">—</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome Fantasia</th>
+          <th>Razão Social / CNPJ</th>
+          <th>Categoria</th>
+          <th>UF / Cidade</th>
+          <th>Produtos / Serviços</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ TAB INCLUSÃO ═══ -->
+<div id="tab-inclusao" class="main hidden">
+  <div style="max-width:660px">
+    <div style="font-size:24px;font-weight:800;margin-bottom:6px">Cadastrar Fornecedor</div>
+    <div style="color:var(--ink2);font-size:13px;margin-bottom:22px">Preencha os dados abaixo. O fornecedor entrará com status <strong style="color:var(--warn)">Em análise</strong>.</div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:26px;box-shadow:var(--shadow);border-top:4px solid var(--green)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">CNPJ <span style="color:var(--gd)">*</span></div>
+          <div style="display:flex;gap:8px">
+            <input class="fsel" id="i_cnpj" placeholder="00.000.000/0001-00" style="flex:1;border-radius:7px;padding:8px 12px" oninput="maskCNPJ(this)">
+            <button class="btn btn-navy" style="font-size:12px" onclick="autofill()">✦ Consultar</button>
+          </div>
+          <div style="font-size:11px;color:var(--ink3)" id="cnpjMsg"></div>
+        </div>
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Nome Fantasia</div>
+          <input class="fsel" id="i_fantasia" placeholder="Nome pelo qual o fornecedor é conhecido" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Razão Social <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_nome" placeholder="Nome completo da empresa" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Itens / Serviços <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_itens" placeholder="Ex: Notebooks, Periféricos, Suporte TI  (separe por vírgula)" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Categoria <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_cat" placeholder="Ex: Tecnologia / TI" style="border-radius:7px;padding:8px 12px" list="catList">
+          <datalist id="catList"><option>Alimentação / Alimentos Preparados</option>
+<option>Alimentação / Café e Insumos</option>
+<option>Alimentação / Distribuição</option>
+<option>Alimentação / Hotelaria e Refeição</option>
+<option>Alimentação / Panificação</option>
+<option>Alimentação / Refeições e Alimentos</option>
+<option>Alimentação / Refeições e Coffee Break</option>
+<option>Alimentação / Refrigerante</option>
+<option>Brindes / Metais</option>
+<option>Brindes / Presentes e Kits</option>
+<option>Brindes / Troféus e Acrílico</option>
+<option>Embalagens</option>
+<option>Facilities / Decoração e Paisagismo</option>
+<option>Higiene / Perfumaria</option>
+<option>Limpeza / Facilities e Saneamento</option>
+<option>Manutenção / Materiais de Construção</option>
+<option>Material de Escritório / Armarinhos</option>
+<option>Papelaria / Etiquetas</option>
+<option>Papelaria / Livros e Treinamentos</option>
+<option>Saúde / Medicamentos e Higiene</option>
+<option>Tecnologia / E-commerce e Eletrônicos</option>
+<option>Tecnologia / Eletroeletrônicos</option>
+<option>Tecnologia / TI e Informática</option>
+<option>Vestuário / Confecções e Tecidos</option>
+<option>Vestuário / Uniformes e EPIs</option></datalist>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">UF <span style="color:var(--gd)">*</span></div>
+          <select class="fsel" id="i_uf" style="border-radius:7px;padding:8px 12px">
+            <option value="">Selecione</option>
+            <option>AC</option><option>AL</option><option>AM</option><option>AP</option><option>BA</option>
+            <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
+            <option>MG</option><option>MS</option><option>MT</option><option>PA</option><option>PB</option>
+            <option>PE</option><option>PI</option><option>PR</option><option>RJ</option><option>RN</option>
+            <option>RO</option><option>RR</option><option>RS</option><option>SC</option><option selected>SP</option>
+            <option>SE</option><option>TO</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Cidade <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_cidade" placeholder="Ex: Uberlândia" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">E-mail <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_email" type="email" placeholder="comercial@empresa.com.br" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Telefone</div>
+          <input class="fsel" id="i_tel" placeholder="(11) 99999-9999" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Contato</div>
+          <input class="fsel" id="i_contato" placeholder="Nome do responsável comercial" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;grid-column:1/-1">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Responsável Suprimentos <span style="color:var(--gd)">*</span></div>
+          <input class="fsel" id="i_resp_sup" placeholder="Nome do responsável interno pela inclusão" style="border-radius:7px;padding:8px 12px">
+          <div style="font-size:11px;color:var(--ink3)">Quem está solicitando a inclusão deste fornecedor</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Prazo (dias úteis)</div>
+          <input class="fsel" id="i_prazo" type="number" min="1" placeholder="Ex: 5" style="border-radius:7px;padding:8px 12px">
+        </div>
+        <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Observações</div>
+          <textarea class="fsel" id="i_obs" rows="3" placeholder="Certificações, condições especiais, observações..." style="border-radius:7px;padding:8px 12px;resize:vertical"></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:2px solid var(--gray)">
+        <button class="btn btn-ghost" onclick="clearForm()">Limpar</button>
+        <button class="btn btn-primary" onclick="salvar()">✓ Salvar na Base</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB FLUXO ═══ -->
+<div id="tab-fluxo" class="main hidden">
+  <div style="font-size:24px;font-weight:800;margin-bottom:6px">Fluxo de Inclusão Ativa</div>
+  <div style="color:var(--ink2);font-size:13px;margin-bottom:22px">Canais para incluir fornecedores sem cadastro manual do time interno.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow)">
+      <div style="font-size:28px;margin-bottom:10px">📧</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:4px">Formulário por E-mail</div>
+      <div style="font-size:12px;color:var(--ink2);margin-bottom:16px">Envie um link ao fornecedor — ele preenche, entra para aprovação</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:var(--navy);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div><div style="font-size:12px;line-height:1.5"><strong>Disparo do convite</strong><br><span style="color:var(--ink2)">Equipe informa e-mail → sistema envia link único</span></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div style="font-size:12px;line-height:1.5"><strong>Preenchimento pelo fornecedor</strong><br><span style="color:var(--ink2)">Nome fantasia, CNPJ, itens, localidade, contatos</span></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--gd);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div style="font-size:12px;line-height:1.5"><strong>Validação + Aprovação</strong><br><span style="color:var(--ink2)">CNPJ consultado automaticamente · 1 clique para ativar</span></div></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px" onclick="showTab('inclusao',document.querySelectorAll('.ntab')[1])">✉ Ir para Cadastro</button>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow);border-top:3px solid var(--gd)">
+      <div style="font-size:28px;margin-bottom:10px">✅</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:4px;color:var(--gd)">Regras de Homologação</div>
+      <div style="font-size:12px;color:var(--ink2);margin-bottom:16px">Critérios para ativação na base</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--gray);border-radius:7px;font-size:12px;font-weight:600"><div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div>CNPJ ativo na Receita Federal</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--gray);border-radius:7px;font-size:12px;font-weight:600"><div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div>Certidão Negativa Trabalhista e FGTS</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--gray);border-radius:7px;font-size:12px;font-weight:600"><div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div>Preenchimento mínimo de 80%</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--gray);border-radius:7px;font-size:12px;font-weight:600"><div style="width:7px;height:7px;border-radius:50%;background:var(--warn)"></div>Aprovação do Coordenador de Suprimentos</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--gray);border-radius:7px;font-size:12px;font-weight:600"><div style="width:7px;height:7px;border-radius:50%;background:var(--navy)"></div>Integração futura com Sankhya ERP via API</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div class="panel-ov" id="pOv" onclick="closePanel()"></div>
+<div class="side-panel" id="sPanel">
+  <div class="ph">
+    <button class="ph-close" onclick="closePanel()">✕</button>
+    <div class="ph-fantasia" id="ph-f">—</div>
+    <div class="ph-rs" id="ph-rs"></div>
+    <div class="ph-cnpj" id="ph-c">—</div>
+  </div>
+  <div class="pb" id="pb"></div>
+</div>
+
+<script>
+const RAW = [{"CNPJ": "21.684.560/0002-63", "RAZÃO SOCIAL": "Vieira E Moura Comercio De Medicamentos Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Saúde / Medicamentos e Higiene", "PRODUTOS_FORNECIDOS": "ACTINE OIL CONTROL REFIL 300G-DEMAIS PROD | NIVEA CELLULAR FPS 30 EXPERT FILLER 49G | SECRET POWDER PROTECT COTTON 45G | VALDA FRIENDS POTE 50G | ACTINE SAB LIQ 400G | PERCOF 6 MGML XPE CT FR VD AMB X 120 MLA COPO MEDA | HISTAMIN 10MG CREME BG 30G | PROTETOR SOLAR NIVEA PEH FP 30 100ML | CARGA GILETTE MACH3 C 2 | LA ROCHE POSAY ANTHELIOS AIRLICIUM FPS80 COR2.0 | FRD HUGGIES ROUPINHA SUP CARE JUMBO M 22UN | FRD HUGGIES ROUPINHA SUP CARE JUMBO G 18UN | YAZ FLEX 30COMP REV | FLORAL BEE MELPROPMENTA SPRAY 35ML | FLORAL BEE MELPROPMENTA EXTRA FORTE SPRAY 35ML", "NCMs": "34013000 | 33049910 | 33072090 | 21069060 | 30049069", "QTD_ITENS_DISTINTOS": 158, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1174240.95, "PRIMEIRA_COMPRA": "2025-03-18", "ULTIMA_COMPRA": "2025-03-18", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "★ Alto Volume | ↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Vieira & Moura", "ITENS_LIMPOS": ["Actine Oil Control (Refil)", "Nivea Cellular FPS 30", "Desodorante Secret Powder", "Valda Friends", "Sabonete Actine Líquido", "Percof 6mg/ml (Xarope)", "Histamin 10mg Creme", "Protetor Solar Nivea FPS 30", "Carga Gillette Mach3", "La Roche-Posay Anthelios FPS 80", "Fralda Huggies Supreme Care M", "Fralda Huggies Supreme Care G", "Yaz Flex (Anticoncepcional)", "Spray Floral Bee Mel & Menta", "Spray Floral Bee Mel & Menta Extra Forte"]}, {"CNPJ": "1704331000175", "RAZÃO SOCIAL": "Infralink Servicos De Infra-Estrutu Empresarial Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Vestuário / Uniformes e EPIs", "PRODUTOS_FORNECIDOS": "CALCA RISCO 2 C/ REFLETIVO G | CALCA RISCO 2 C/ REFLETIVO GG | CAMISA RISCO 2 C/REFLETIVO G | CAMISA RISCO 02 C/REFLETIVO GG | BOTA PROT ELASTICO BIQ COMPOSITE 42 | BOTA PROT ELASTICO BIQ COMPOSITE 43 | AVENTAL RASPA S/EMENDA | CAPA CHUVA PVC FORRADO AMARELA TAM G | CAPACETE BCO C/ ABA FRONTAL CA 498/29638 | CINTO DE SEGURANCA 2 TALABARTE | TALABARTE Y 50MM C/ AMORT QUEDA 1,30 MT | COLETE 1 BOLSO REFLETIVO ZIPER LARANJA G | LUVA EM MALHA 4 FIOS PIGMENTADA BEGE U | LUVA ISOL 2,5KV CLAS 00 PR T 10,5 CA2178 | LUVA LATEX VOLK SLIM FORRADA AMARELA G", "NCMs": "61046200 | 61061000 | 64039990 | 42034000 | 90049020", "QTD_ITENS_DISTINTOS": 93, "QTD_NFS": 5, "VALOR_TOTAL_R$": 463556.56, "PRIMEIRA_COMPRA": "2025-03-24", "ULTIMA_COMPRA": "2025-03-24", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "★ Alto Volume", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Infralink", "ITENS_LIMPOS": ["Calça Risco 2 com Refletivo (G)", "Calça Risco 2 com Refletivo (GG)", "Camisa Risco 2 com Refletivo (G)", "Camisa Risco 2 com Refletivo (GG)", "Bota de Proteção Biqueira Composite (42)", "Bota de Proteção Biqueira Composite (43)", "Avental de Raspa sem Emenda", "Capa de Chuva PVC (G)", "Capacete Branco com Aba Frontal", "Cinto de Segurança com Talabarte", "Talabarte Y com Amortecedor", "Colete Refletivo com Zíper (G)", "Luva em Malha Pigmentada", "Luva Isolante 2,5kV", "Luva Látex Forrada (G)"]}, {"CNPJ": "60.902.939/0001-73", "RAZÃO SOCIAL": "Brasanitas Empresa Brasileira De Saneamento E Comercio Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Limpeza / Facilities e Saneamento", "PRODUTOS_FORNECIDOS": "CJ SERV OXFORD GRUPO P | CJ SERV OXFORD GRUPO M | CJ SERV OXFORD GRUPO G | CJ SERV OXFORD GRUPO GG | CJ ENCARREGADA/LIDER M | CJ ENCARREGADA/LIDER G | SAPATO EVA S BIQUEIRA PT 34 CA42888 | SAPATO EVA S BIQUEIRA PT 35 CA42888 | SAPATO EVA S BIQUEIRA PT 36 CA42888 | SAPATO EVA S BIQUEIRA PT 37 CA42888 | SAPATO EVA S BIQUEIRA PT 38 CA42888 | SAPATO EVA S BIQUEIRA PT 39 CA42888 | BOTA BRACOL PVC C/L PRETO 34 | BOTA BRACOL PVC C/L PRETO 35 | BOTA BRACOL PVC C/L PRETO 36", "NCMs": "62034300 | 61042200 | 64019990 | 64019200 | 40151900", "QTD_ITENS_DISTINTOS": 34, "QTD_NFS": 6, "VALOR_TOTAL_R$": 258828.01, "PRIMEIRA_COMPRA": "2025-03-18", "ULTIMA_COMPRA": "2025-03-25", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "★ Alto Volume", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Brasanitas", "ITENS_LIMPOS": ["Conjunto de Serviço Oxford (P)", "Conjunto de Serviço Oxford (M)", "Conjunto de Serviço Oxford (G)", "Conjunto de Serviço Oxford (GG)", "Conjunto Encarregada/Líder (M)", "Conjunto Encarregada/Líder (G)", "Sapato EPI sem Biqueira (34)", "Sapato EPI sem Biqueira (35)", "Sapato EPI sem Biqueira (36)", "Sapato EPI sem Biqueira (37)", "Sapato EPI sem Biqueira (38)", "Sapato EPI sem Biqueira (39)", "Bota PVC com Cano (34)", "Bota PVC com Cano (35)", "Bota PVC com Cano (36)"]}, {"CNPJ": "3341743000709", "RAZÃO SOCIAL": "Castro Naves Comercio E Servicos De Dist", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Café e Insumos", "PRODUTOS_FORNECIDOS": "CAFE TORRADO MOIDO CAJUBA Pct/500g | FILTRO PARA CAFE DE PAPEL 103 3C CX/30 | BISCOITO AGUA E SAL 164G AYMORE | BISCOITO BAUDUCCO LEVISSIMO MAIZENA 170G | AGUA SANITARIA TRADICIONAL GL/5Lt. | SABONETE LIQ. ERVA DOCE SOFT PLUS GL/5L | PAPEL H. ROLAO FL SIMPLES GOLD CX/8X250M | PAPEL T. 2D FL SIMPLES 30G PREMIUM CX/2000 | ALCOOL LIQUIDO 46,2 INPM SOL FR/ 1Lt. | ODORIZADOR BOM AR 360ml LAVANDA | SACO LIXO 105L PRETO REFORCADO PT/50 | SACO LIXO 200L PRETO REFORCADO PT/50 90X100 | SACO LIXO  20L PRETO PT/100 | PAPEL T. 2D FL DUPLA 30G DOUBLE SHEET CX/2000 | ACUCAR CRISTAL FILTRADO DELTA PT/ 5 KG.", "NCMs": "09012100 | 48232099 | 19053100 | 28289019 | 34013000", "QTD_ITENS_DISTINTOS": 15, "QTD_NFS": 2, "VALOR_TOTAL_R$": 49209.99, "PRIMEIRA_COMPRA": "2025-03-10", "ULTIMA_COMPRA": "2025-03-14", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Castro Naves Distribuição", "ITENS_LIMPOS": ["Café Moído Cajubá", "Filtro de Café de Papel nº103", "Biscoito Água e Sal Aymoré", "Biscoito Maizena Bauducco", "Água Sanitária 5L", "Sabonete Líquido Erva Doce 5L", "Papel Higiênico Rolão", "Papel Toalha Simples", "Álcool Líquido 46,2° INPM", "Odorizador Bom Ar Lavanda", "Saco de Lixo 105L Reforçado", "Saco de Lixo 200L Reforçado", "Saco de Lixo 20L", "Papel Toalha Folha Dupla", "Açúcar Cristal 5kg"]}, {"CNPJ": "26.889.443/0001-79", "RAZÃO SOCIAL": "Luciana De Castro Costa 05026475663", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Brindes / Metais", "PRODUTOS_FORNECIDOS": "FRUTA PICADA | FRUTA INTEIRA | FRUTAS DIVERSAS", "NCMs": "81109000", "QTD_ITENS_DISTINTOS": 3, "QTD_NFS": 1, "VALOR_TOTAL_R$": 29394.75, "PRIMEIRA_COMPRA": "2025-03-24", "ULTIMA_COMPRA": "2025-03-24", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Luciana Costa (PF)", "ITENS_LIMPOS": ["Fruta Picada", "Fruta Inteira", "Frutas Diversas"]}, {"CNPJ": "50.026.976/0001-01", "RAZÃO SOCIAL": "V B S Acessorios Eletronicos Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "ESTOJO P KIT TECNOLOGICO - I*18673", "NCMs": "42023200", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 26700.0, "PRIMEIRA_COMPRA": "2025-03-17", "ULTIMA_COMPRA": "2025-03-17", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "VBS Acessórios", "ITENS_LIMPOS": ["Estojo para Kit Tecnológico"]}, {"CNPJ": "41.030.885/0001-59", "RAZÃO SOCIAL": "Dda Malharia - Eireli", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Vestuário / Confecções e Tecidos", "PRODUTOS_FORNECIDOS": "Camisa Polo Piquet Gola Basica Color P | Camisa Polo Piquet Gola Basica Color M | Camisa Polo Piquet Gola Basica Color G | Camisa Polo Piquet Gola Basica Color GG | Camisa Polo Piquet Gola Basica Color 3G", "NCMs": "61052000", "QTD_ITENS_DISTINTOS": 5, "QTD_NFS": 1, "VALOR_TOTAL_R$": 23220.0, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-05", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "DDA Malharia", "ITENS_LIMPOS": ["Camisa Polo Piquet (P)", "Camisa Polo Piquet (M)", "Camisa Polo Piquet (G)", "Camisa Polo Piquet (GG)", "Camisa Polo Piquet (3G)"]}, {"CNPJ": "17.150.126/0001-45", "RAZÃO SOCIAL": "Aro Panificadora Ltda - Me", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Panificação", "PRODUTOS_FORNECIDOS": "TORTA DE PRESTIGIO | PAO DE QUEIJO | ENROLADINHO DE PRESUNTO, MUSSARELA E TOMATE | COXINHA DE FRANGO | ESFIRRA DE CARNE | PASTEL DE QUEIJO | MINI SANDUICHE PATE DE FRANGO - PAO DE BATATA | TETRA PARK UVA 1L | COCA COLA  2 L | COCA COLA ZERO PT 2 L | MINI WRAP CARNE LOUCA | MINI SANDUICHE PATE DE RICOTA - PAO DE BATATA | MINI SANDUICHE PRESUNTO E MUSSARELA - PAO DE BATATA | EMPADA DE PALMITO | FOLHADO DE GOIABADA COM QUEIJO", "NCMs": "19022000 | 19059090 | 22029900 | 22021000", "QTD_ITENS_DISTINTOS": 17, "QTD_NFS": 2, "VALOR_TOTAL_R$": 17960.0, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-20", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "ARO Panificadora", "ITENS_LIMPOS": ["Torta de Prestígio", "Pão de Queijo", "Enroladinho de Presunto e Mussarela", "Coxinha de Frango", "Esfiha de Carne", "Pastel de Queijo", "Mini Sanduíche de Frango", "Suco de Uva Tetra Pak 1L", "Coca-Cola 2L", "Coca-Cola Zero 2L", "Mini Wrap de Carne Louca", "Mini Sanduíche de Ricota", "Mini Sanduíche Presunto e Mussarela", "Empada de Palmito", "Folhado de Goiabada com Queijo"]}, {"CNPJ": "27.680.140/0007-08", "RAZÃO SOCIAL": "Gf4 Participacoes Ltda - Filial 7", "UF": "DF", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Coffee Break", "PRODUTOS_FORNECIDOS": "PACOTE DE COMIDA | PACOTE DE BEBIDAS", "NCMs": "21069090 | 22021000", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 2, "VALOR_TOTAL_R$": 16552.8, "PRIMEIRA_COMPRA": "2025-03-24", "ULTIMA_COMPRA": "2025-03-26", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "GF4 Participações", "ITENS_LIMPOS": ["Refeição (pacote)", "Bebidas (pacote)"]}, {"CNPJ": "41.896.005/0001-21", "RAZÃO SOCIAL": "Lab Fornelli Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Coffee Break", "PRODUTOS_FORNECIDOS": "DESPESA COM REFEICAO", "NCMs": "21069090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 16200.0, "PRIMEIRA_COMPRA": "2025-03-17", "ULTIMA_COMPRA": "2025-03-17", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Lab Fornelli", "ITENS_LIMPOS": ["Refeição"]}, {"CNPJ": "7586045000139", "RAZÃO SOCIAL": "Rb Code-Comercio E Serviços De Produtos E Soluções Em Ti Ltd", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / TI e Informática", "PRODUTOS_FORNECIDOS": "Coletor DS5A Android 9.0, 2.0Ghz, 2GB/16GB, BT, Wifi, 2D, Cam., teclado 54, cabo e fonte - BR | Protetor bumper de borracha - BR | Gatilho DS5A - BR | Capa protetora do coletor DS5 modelo Mobilebase BR", "NCMs": "84713019 | 42029900 | 84733090 | 42023200", "QTD_ITENS_DISTINTOS": 4, "QTD_NFS": 1, "VALOR_TOTAL_R$": 14101.72, "PRIMEIRA_COMPRA": "2025-03-12", "ULTIMA_COMPRA": "2025-03-12", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "RB Code TI", "ITENS_LIMPOS": ["Coletor de Dados DS5A Android", "Protetor Bumper de Borracha", "Gatilho para Coletor DS5A", "Capa Protetora Coletor DS5"]}, {"CNPJ": "6057223035552", "RAZÃO SOCIAL": "Sendas Distribuidora S/A Lj158", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Distribuição", "PRODUTOS_FORNECIDOS": "AGUA MIN MINEIRO S/G 500ML | AGUA SANITARIA SANTA CLARA 2L | BEB ENERG RED BULL 250ML | BEB ENERG RED BULL 250ML SUGAR FREE | BOMBOM LACTA FAVORITOS 250,6G | CERVEJA HEINEKEN 269ML | CHOC BIS LACTA 100,8G BRANCO | CHOC BISAO LACTA 201,6G AO LEITE | COPO DESC TRANS PP COPOBRAS 300ML C/100 | CR DENTAL COLGATE TRIPLA ACAO 120G PRECO ESPECIAL | DESINF AZULIM 1L WAVE | DESINF PINHO TROP LV1L PG900ML LAVANDA | DET LIQ YPE 500ML LIMAO | FIO DENTAL GREEN 75MTS MENTA | GUARD PAPEL SCOTT GRAND HOTEL 31,8 X 32,8 C/50", "NCMs": "22011000 | 28289011 | 22029900 | 18069000 | 22030000", "QTD_ITENS_DISTINTOS": 21, "QTD_NFS": 1, "VALOR_TOTAL_R$": 11984.07, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Extra / Assaí (Sendas)", "ITENS_LIMPOS": ["Água Mineral sem Gás", "Água Sanitária 2L", "Red Bull", "Red Bull Sugar Free", "Bombom Lacta Favoritos", "Cerveja Heineken", "Biscoito Bis Branco Lacta", "Biscoito Bisão Ao Leite Lacta", "Copo Descartável 300ml", "Creme Dental Colgate Tripla Ação", "Desinfetante Azulim", "Desinfetante Pinho Sol Lavanda", "Detergente Ypê Limão", "Fio Dental Menta 75m", "Guardanapo Scott Grand Hotel"]}, {"CNPJ": "25.133.782/0001-68", "RAZÃO SOCIAL": "Rsg Informatica Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / TI e Informática", "PRODUTOS_FORNECIDOS": "Memoria DDR4 Notebook 16gb Ddr4 3200mhz Cl22 Adata", "NCMs": "84733042", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 2, "VALOR_TOTAL_R$": 7688.4, "PRIMEIRA_COMPRA": "2025-03-12", "ULTIMA_COMPRA": "2025-03-12", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "RSG Informática", "ITENS_LIMPOS": ["Memória RAM DDR4 16GB Notebook"]}, {"CNPJ": "40.155.591/0001-90", "RAZÃO SOCIAL": "Melo & Abreu Industria E Comercio De Confeccoes Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Vestuário / Confecções e Tecidos", "PRODUTOS_FORNECIDOS": "CAMISETA ALGODAO COLOR P | CAMISETA ALGODAO COLOR M | CAMISETA ALGODAO COLOR G | CAMISETA ALGODAO COLOR GG | CAMISETA ALGODAO COLOR 3G | BABY LOOK ALGODAO COLOR P | BABY LOOK ALGODAO COLOR M", "NCMs": "61051000", "QTD_ITENS_DISTINTOS": 7, "QTD_NFS": 1, "VALOR_TOTAL_R$": 6650.0, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Melo & Abreu Confecções", "ITENS_LIMPOS": ["Camiseta Algodão (P)", "Camiseta Algodão (M)", "Camiseta Algodão (G)", "Camiseta Algodão (GG)", "Camiseta Algodão (3G)", "Baby Look Algodão (P)", "Baby Look Algodão (M)"]}, {"CNPJ": "25.628.819/0009-86", "RAZÃO SOCIAL": "Irmaos Kehdi Com. E Imp. Ltda.", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Distribuição", "PRODUTOS_FORNECIDOS": "GUARDANAPO MAXIN BCO.23X22-16X50UN(5) | LEITE L.V.UAI INTEGRAL C/TPA.12X1 LT | REF PO FRESH CAJU 2 LT 15X15 GR(10) | REF PO FRESH GUARANA 2 LT 15X15 GR(10) | REF PO TANG MANGA 18X18 GR(10) | ACUCAR CRIST ESP EXT KEHDI 6X5 KG | ARROZ KEHDI LF T1 6X5 | CAFE KEHDI EM PO 10X500 GR | EMBALAGEM PLAST. P/ CESTAS DE ALIMENTO | EXT.T.DEZ SC 36X300 GR | FAR TRIGO LUNAR 10X1 TIPO 1 PA | FEIJAO CAR.KEHDI T1 10X1 KG | GOIABADA VAL TAB.24X500 GR | MAC ROBERTA ESPAG.24X500 OVOS | OLEO SOJA VITALIV PET 20X900 ML", "NCMs": "48183000 | 04012010 | 21069010 | 17019900 | 10063021", "QTD_ITENS_DISTINTOS": 17, "QTD_NFS": 2, "VALOR_TOTAL_R$": 6526.75, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-06", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Ativo", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Kehdi Distribuição", "ITENS_LIMPOS": ["Guardanapo Branco", "Leite Integral UAI", "Refresco em Pó Caju", "Refresco em Pó Guaraná", "Refresco em Pó Tang Manga", "Açúcar Cristal Kehdi 5kg", "Arroz Longo Fino Kehdi", "Café em Pó Kehdi", "Embalagem para Cesta", "Extrato de Tomate", "Farinha de Trigo Tipo 1", "Feijão Carioca Kehdi", "Goiabada em Tablete", "Macarrão Espaguete com Ovos", "Óleo de Soja Vitaliv"]}, {"CNPJ": "8584116000470", "RAZÃO SOCIAL": "Webcontinental Ltda", "UF": "ES", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "AR COND SPLIT HW SPRINGER MIDEA XTREME SAVE CONNECT 12000 BTU FR INVERTER 220V COND (38AGVCI12M5) 38AGVCI12M5 | AR COND SPLIT HW SPRINGER MIDEA XTREME SAVE CONNECT 12000 BTU FR INVERTER 220V EVAP (42AGVCI12M5) 42AGVCI12M5", "NCMs": "84151011", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 1, "VALOR_TOTAL_R$": 5798.0, "PRIMEIRA_COMPRA": "2025-03-12", "ULTIMA_COMPRA": "2025-03-12", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "WebContinental", "ITENS_LIMPOS": ["Ar Condicionado Split 12.000 BTU Inverter (Condensadora)", "Ar Condicionado Split 12.000 BTU Inverter (Evaporadora)"]}, {"CNPJ": "3007331001032", "RAZÃO SOCIAL": "Ebazar.Com.Br. Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Camera externa inteligente Intelbras IM5 SC Branco | Os 5 desafios das equipes - Sextante | Comece pelo porque - Sextante | Lideres Se Servem Por Ultimo: Como Construir Equipes Seguras E Confiantes - Editora Alta Books", "NCMs": "85258929 | 49019900", "QTD_ITENS_DISTINTOS": 4, "QTD_NFS": 2, "VALOR_TOTAL_R$": 3519.28, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "eBazar", "ITENS_LIMPOS": ["Câmera Inteligente Intelbras IM5", "Os 5 Desafios das Equipes", "Comece pelo Porquê", "Líderes Se Servem por Último"]}, {"CNPJ": "30.200.049/0002-30", "RAZÃO SOCIAL": "Yoobe Tecnologia Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Brindes / Presentes e Kits", "PRODUTOS_FORNECIDOS": "Mochila para notebook 15.6 Sankhya | Kit Vinho Sankhya | Kit churrasco Sankhya | BLOCO DE NOTAS SANKHYA", "NCMs": "42029200 | 82055100 | 82152000 | 48201000", "QTD_ITENS_DISTINTOS": 4, "QTD_NFS": 1, "VALOR_TOTAL_R$": 3407.12, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-06", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Yoobe", "ITENS_LIMPOS": ["Mochila para Notebook Sankhya", "Kit Vinho Sankhya", "Kit Churrasco Sankhya", "Bloco de Notas Sankhya"]}, {"CNPJ": "23.511.101/0001-22", "RAZÃO SOCIAL": "Gran Steak Restaurante Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "REFEICAO", "NCMs": "21069090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 3010.0, "PRIMEIRA_COMPRA": "2025-03-24", "ULTIMA_COMPRA": "2025-03-24", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Gran Steak", "ITENS_LIMPOS": ["Refeição"]}, {"CNPJ": "4389070000134", "RAZÃO SOCIAL": "Executive Inn Hotel - Hotelaria R Cunha Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Hotelaria e Refeição", "PRODUTOS_FORNECIDOS": "Agua mineral s/ gas 510 ml | Agua mineral c/ gas 310 ml | Tilapia Grelhada | Fruta da estacao | Chocolate Laka | Chocolate Talento | Batata Crocks | Parmegiana de Frango | File Parmegiana | X-egg | Coca cola zero | Coca-Cola (Lata) | X-burguer", "NCMs": "22011000 | 21069090 | 08109090 | 18063110 | 20052000", "QTD_ITENS_DISTINTOS": 13, "QTD_NFS": 8, "VALOR_TOTAL_R$": 1949.1, "PRIMEIRA_COMPRA": "2025-03-01", "ULTIMA_COMPRA": "2025-03-21", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Executive Inn Hotel", "ITENS_LIMPOS": ["Água Mineral sem Gás", "Água Mineral com Gás", "Tilápia Grelhada", "Fruta da Estação", "Chocolate Lacta Laka", "Chocolate Talento", "Batata Crocks", "Parmegiana de Frango", "Filé à Parmegiana", "X-Egg", "Coca-Cola Zero", "Coca-Cola Lata", "X-Burguer"]}, {"CNPJ": "36.686.039/0001-51", "RAZÃO SOCIAL": "Mocafe Minas Comercio E Distribuicao Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Café e Insumos", "PRODUTOS_FORNECIDOS": "CAPPUCCINO AVELA VEND - 1 KG", "NCMs": "21011190", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1677.0, "PRIMEIRA_COMPRA": "2025-03-10", "ULTIMA_COMPRA": "2025-03-10", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Mocafé Minas", "ITENS_LIMPOS": ["Cappuccino Avelã para Vending"]}, {"CNPJ": "307402000133", "RAZÃO SOCIAL": "Lufir Comercio E Representacao Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refrigerante", "PRODUTOS_FORNECIDOS": "RED BULL DP 4X250ML PACK (6)", "NCMs": "22029900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1628.88, "PRIMEIRA_COMPRA": "2025-03-26", "ULTIMA_COMPRA": "2025-03-26", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Lufir", "ITENS_LIMPOS": ["Red Bull Pack"]}, {"CNPJ": "1534593000210", "RAZÃO SOCIAL": "Tecidos Tita Ltda - Uberlandia", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / TI e Informática", "PRODUTOS_FORNECIDOS": "FOFINHA EST 999 | FRUTAL VERDE 5004", "NCMs": "52085910 | 52083300", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1617.6, "PRIMEIRA_COMPRA": "2025-03-11", "ULTIMA_COMPRA": "2025-03-11", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Tecidos Tita", "ITENS_LIMPOS": ["Tecido Fofinha Estampado", "Tecido Frutal Verde"]}, {"CNPJ": "11.671.015/0001-06", "RAZÃO SOCIAL": "Parati Alimentos Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "REFEICAO | AGUA MINERAL C/GAS | CALDO DE VACA ATOLADA | BATATA | COCA COLA LATA | CHOCOLATE", "NCMs": "21069090 | 22011000 | 18069000", "QTD_ITENS_DISTINTOS": 6, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1563.8, "PRIMEIRA_COMPRA": "2025-03-20", "ULTIMA_COMPRA": "2025-03-20", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Parati Alimentos", "ITENS_LIMPOS": ["Refeição", "Água Mineral com Gás", "Caldo de Carne", "Batata", "Coca-Cola Lata", "Chocolate"]}, {"CNPJ": "41.751.470/0001-74", "RAZÃO SOCIAL": "Klin Shop Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Higiene / Perfumaria", "PRODUTOS_FORNECIDOS": "FREECO BLOQUEADOR DE ODORES SANITARIOS AMAZONIA 500ML", "NCMs": "33074900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1504.8, "PRIMEIRA_COMPRA": "2025-03-14", "ULTIMA_COMPRA": "2025-03-14", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Klin Shop", "ITENS_LIMPOS": ["Bloqueador de Odores Sanitários"]}, {"CNPJ": "27.295.298/0001-60", "RAZÃO SOCIAL": "Plaza Shopping Hotel Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Hotelaria e Refeição", "PRODUTOS_FORNECIDOS": "Menu Degustacao", "NCMs": "21069090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1440.0, "PRIMEIRA_COMPRA": "2025-03-20", "ULTIMA_COMPRA": "2025-03-20", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Plaza Shopping Hotel", "ITENS_LIMPOS": ["Menu Degustação"]}, {"CNPJ": "25.758.277/0001-09", "RAZÃO SOCIAL": "Icatril - Ind. De Cafe Do Triangulo Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Café e Insumos", "PRODUTOS_FORNECIDOS": "CAFE MOIDO CAJUBA 500GR", "NCMs": "09012100", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 2, "VALOR_TOTAL_R$": 1400.0, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-13", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Cajubá / Icatril", "ITENS_LIMPOS": ["Café Moído Cajubá"]}, {"CNPJ": "4389070000215", "RAZÃO SOCIAL": "Gran Executive Hotel - Hotelaria R. Cunha Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Hotelaria e Refeição", "PRODUTOS_FORNECIDOS": "Ravioli de Mozzarella | Salmao Executive | Coca cola zero | X-burguer | Agua mineral s/ gas 510 ml | Frango Executive | Pizza Calabresa", "NCMs": "19023000 | 21069090 | 22021000 | 22011000", "QTD_ITENS_DISTINTOS": 7, "QTD_NFS": 4, "VALOR_TOTAL_R$": 1114.3, "PRIMEIRA_COMPRA": "2025-03-12", "ULTIMA_COMPRA": "2025-03-21", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Gran Executive Hotel", "ITENS_LIMPOS": ["Ravioli de Mozzarella", "Salmão Grelhado", "Coca-Cola Zero", "X-Burguer", "Água Mineral sem Gás", "Frango Grelhado", "Pizza Calabresa"]}, {"CNPJ": "24.804.709/0005-31", "RAZÃO SOCIAL": "Vikings Digital Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Smart Tv Led 32 Hd Samsung Ls32betblggxzd 2 Hdmi 1 Usb Preto", "NCMs": "85287200", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 1079.0, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Vikings Digital", "ITENS_LIMPOS": ["Smart TV Samsung 32\" HD"]}, {"CNPJ": "41.603.660/0001-44", "RAZÃO SOCIAL": "Panificadora Madu Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Panificação", "PRODUTOS_FORNECIDOS": "Lanche | Pao queijo Kg", "NCMs": "19059090", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 4, "VALOR_TOTAL_R$": 1021.68, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-20", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Panificadora Madu", "ITENS_LIMPOS": ["Lanche", "Pão de Queijo"]}, {"CNPJ": "71.022.776/0003-12", "RAZÃO SOCIAL": "Proalfa Comercio E Distribuicao Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Distribuição", "PRODUTOS_FORNECIDOS": "BALAO PIC PIC N9 C/50 VERDE LIMAO | BALAO PIC PIC N9 C/50 VIOLETA | BALAO SAO ROQUE N7 C/50 PRETO EBANO", "NCMs": "95030099", "QTD_ITENS_DISTINTOS": 3, "QTD_NFS": 1, "VALOR_TOTAL_R$": 894.63, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Proalfa", "ITENS_LIMPOS": ["Balão Verde Limão nº9 (50un)", "Balão Violeta nº9 (50un)", "Balão Preto nº7 (50un)"]}, {"CNPJ": "45.637.906/0001-50", "RAZÃO SOCIAL": "Xd Mega Imports Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "1 Impressora Xd-210 + 10 Rolos Etiquetas 50x30 Prova D agua", "NCMs": "84433232", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 698.0, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-05", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "XD Mega Imports", "ITENS_LIMPOS": ["Impressora XD-210 + Etiquetas"]}, {"CNPJ": "47.148.392/0001-02", "RAZÃO SOCIAL": "Lugh Comercio Eletronico E Solucoes Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Leitor Eletronico Kindle 11th Gen 2024 16gb Preto Com Tela De 6 Polegadas", "NCMs": "90328911", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 633.0, "PRIMEIRA_COMPRA": "2025-03-21", "ULTIMA_COMPRA": "2025-03-21", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Lugh", "ITENS_LIMPOS": ["Kindle 11ª Geração 16GB"]}, {"CNPJ": "41.078.425/0001-09", "RAZÃO SOCIAL": "Digi Megastore Sociedade Unipessoal Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Suporte Para Tv Pedestal Clean 19 A 56 Resolve 2.3.2 | Cabo Hdmi 2.0 4k Blindado 5m Ponta Gold 60hz Aquario", "NCMs": "85291090", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 2, "VALOR_TOTAL_R$": 629.25, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Digi Megastore", "ITENS_LIMPOS": ["Suporte de TV Pedestal", "Cabo HDMI 2.0 4K 5m"]}, {"CNPJ": "37.752.864/0002-50", "RAZÃO SOCIAL": "V N Fernandes Solucoes De Ecommerce Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Pilha Alcalina AAA Palito Duracell com 16 Unidades | Pilha Alcalina AA Pequena Duracell com 16 Unidades", "NCMs": "85061019", "QTD_ITENS_DISTINTOS": 2, "QTD_NFS": 1, "VALOR_TOTAL_R$": 619.28, "PRIMEIRA_COMPRA": "2025-03-13", "ULTIMA_COMPRA": "2025-03-13", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "VN Fernandes E-commerce", "ITENS_LIMPOS": ["Pilhas Duracell AAA (16un)", "Pilhas Duracell AA (16un)"]}, {"CNPJ": "22.063.633/0001-81", "RAZÃO SOCIAL": "Petalas De Paz Paisagismo Ltda - Epp", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Facilities / Decoração e Paisagismo", "PRODUTOS_FORNECIDOS": "ARTE PLUS -  COROA FUNEBRE", "NCMs": "67021000", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 550.0, "PRIMEIRA_COMPRA": "2025-03-03", "ULTIMA_COMPRA": "2025-03-03", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Pétalas de Paz", "ITENS_LIMPOS": ["Coroa Fúnebre"]}, {"CNPJ": "44.335.996/0001-61", "RAZÃO SOCIAL": "44.335.996 Arthur Henrique Rodrigues Rezende", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Brindes / Troféus e Acrílico", "PRODUTOS_FORNECIDOS": "OUTROS/TROFEU EM ACRILICO TRANSP. 3MM10X15CM", "NCMs": "90212110", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 525.0, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Arthur Rezende (Acrílico)", "ITENS_LIMPOS": ["Troféu em Acrílico"]}, {"CNPJ": "37.714.202/0002-96", "RAZÃO SOCIAL": "Leitura Sp Livraria E Papelaria Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "TRANSFORMANDO PROBLEMAS EM OPORTUNIDAD", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 420.4, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Leitura SP", "ITENS_LIMPOS": ["Transformando Problemas em Oportunidades"]}, {"CNPJ": "41.806.790/0001-84", "RAZÃO SOCIAL": "E3 Industria E Comercio De Embalagens Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Embalagens", "PRODUTOS_FORNECIDOS": "Caixa para Transportes - (54x36x27CM) - COD 137", "NCMs": "48191000", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 415.5, "PRIMEIRA_COMPRA": "2025-03-10", "ULTIMA_COMPRA": "2025-03-10", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "E3 Embalagens", "ITENS_LIMPOS": ["Caixa de Transporte 54x36x27cm"]}, {"CNPJ": "20.799.537/0001-70", "RAZÃO SOCIAL": "Cefis", "UF": "SP", "CIDADE": "Uberlândia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "Material Didático Ebook CEFIS ISBN 978-65-996851-2-5 Editora CEFIS", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 3, "VALOR_TOTAL_R$": 351.27, "PRIMEIRA_COMPRA": "2025-03-09", "ULTIMA_COMPRA": "2025-03-19", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "CEFIS", "ITENS_LIMPOS": ["Material Didático CEFIS (E-book)"]}, {"CNPJ": "31.303.640/0001-02", "RAZÃO SOCIAL": "Mgr Comida Caseira Eireli", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "PAO DE QUEIJO | COCA COLA 2 LT DESCARTAVEL | COXINHA", "NCMs": "19012090 | 22021000 | 21069090", "QTD_ITENS_DISTINTOS": 3, "QTD_NFS": 1, "VALOR_TOTAL_R$": 351.0, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-06", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "MGR Comida Caseira", "ITENS_LIMPOS": ["Pão de Queijo", "Coca-Cola 2L", "Coxinha"]}, {"CNPJ": "49.730.901/0001-28", "RAZÃO SOCIAL": "Infocameras Ecommerce Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Controle Remoto Portao Preto 3 Teclas Nice/peccinin Original", "NCMs": "85269200", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 285.65, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "InfoCameras", "ITENS_LIMPOS": ["Controle Remoto de Portão"]}, {"CNPJ": "10.463.088/0001-31", "RAZÃO SOCIAL": "Souza Felix Alimentos Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "COFFEE BREAK", "NCMs": "21069090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 279.0, "PRIMEIRA_COMPRA": "2025-03-05", "ULTIMA_COMPRA": "2025-03-05", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Souza Felix Alimentos", "ITENS_LIMPOS": ["Coffee Break"]}, {"CNPJ": "59.587.438/0001-60", "RAZÃO SOCIAL": "Curica Presentes Ltda", "UF": "SP", "CIDADE": "Uberlândia", "CATEGORIA": "Brindes / Presentes e Kits", "PRODUTOS_FORNECIDOS": "Adaptador Usb C Para Hdmi  Dois Monitores  4k-Cinza", "NCMs": "67049000", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 261.43, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Curica Presentes", "ITENS_LIMPOS": ["Adaptador Usb C para Hdmi Dois Monitores 4k-cinza"]}, {"CNPJ": "7004525000144", "RAZÃO SOCIAL": "H Mais Administracao Hoteleira Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Hotelaria e Refeição", "PRODUTOS_FORNECIDOS": "Cafe da Manha", "NCMs": "09012100", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 3, "VALOR_TOTAL_R$": 252.0, "PRIMEIRA_COMPRA": "2025-03-23", "ULTIMA_COMPRA": "2025-03-29", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Validar", "ALERTAS": "✓ OK", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "H+ Hotel", "ITENS_LIMPOS": ["Café da Manhã"]}, {"CNPJ": "39.956.427/0001-01", "RAZÃO SOCIAL": "Euripedes Silva Neto 04220797661", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Alimentos Preparados", "PRODUTOS_FORNECIDOS": "BOX VINHO & TACA", "NCMs": "21069090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 250.0, "PRIMEIRA_COMPRA": "2025-03-06", "ULTIMA_COMPRA": "2025-03-06", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Euripedes Silva (PF)", "ITENS_LIMPOS": ["Box Vinho e Taça"]}, {"CNPJ": "41.700.519/0001-60", "RAZÃO SOCIAL": "Leitura Avenida Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "EMPATIA ASSERTIVA 2D", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 202.32, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Leitura Avenida", "ITENS_LIMPOS": ["Empatia Assertiva (livro)"]}, {"CNPJ": "42.865.329/0001-65", "RAZÃO SOCIAL": "Expresso Industria E Comercio De Alimentos Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "PAO DE QUEIJO CONG TERRA DE MINAS 1 KG", "NCMs": "19012090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 180.0, "PRIMEIRA_COMPRA": "2025-03-25", "ULTIMA_COMPRA": "2025-03-25", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Expresso Alimentos", "ITENS_LIMPOS": ["Pão de Queijo Congelado Terra de Minas"]}, {"CNPJ": "38.067.712/0001-09", "RAZÃO SOCIAL": "Loja Santa Efigenia Comercial Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Pilha Duracell Alcalina Aaa 16un - Kit 2 Und", "NCMs": "85061019", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 179.99, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Santa Efigênia", "ITENS_LIMPOS": ["Pilhas Duracell AAA (kit 2x16un)"]}, {"CNPJ": "7195235000125", "RAZÃO SOCIAL": "Homenagens Brindes E Presentes Ltda - Me", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Brindes / Presentes e Kits", "PRODUTOS_FORNECIDOS": "TROFEU 3MM 20CMX18CM BASE DUPLA PRETA 3MM", "NCMs": "90212110", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 175.0, "PRIMEIRA_COMPRA": "2025-03-27", "ULTIMA_COMPRA": "2025-03-27", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Homenagens Brindes", "ITENS_LIMPOS": ["Troféu em Acrílico 20x18cm"]}, {"CNPJ": "12.463.159/0002-02", "RAZÃO SOCIAL": "Treninos Industrial De Alimentos Ltda", "UF": "SP", "CIDADE": "Campinas", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "PICOLE LEITE/FRUTA", "NCMs": "21050010", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 160.0, "PRIMEIRA_COMPRA": "2025-03-03", "ULTIMA_COMPRA": "2025-03-03", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Treninos Alimentos", "ITENS_LIMPOS": ["Picolé de Leite e Fruta"]}, {"CNPJ": "4678459000108", "RAZÃO SOCIAL": "Cabo Eletro Comercial Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "Papel Sulfite Copimax A4 Multifuncao de 500 Folhas de 75g", "NCMs": "48025610", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 157.1, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Cabo Eletro", "ITENS_LIMPOS": ["Papel Sulfite A4 500 Folhas"]}, {"CNPJ": "33.257.421/0003-13", "RAZÃO SOCIAL": "Prosperity Comercio De Equipamentos Eletronicos Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / E-commerce e Eletrônicos", "PRODUTOS_FORNECIDOS": "SUPORTE ARTICULADO 4 MOVIMENTOS 26 ATE 65 SAV-4401", "NCMs": "73269090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 138.5, "PRIMEIRA_COMPRA": "2025-03-21", "ULTIMA_COMPRA": "2025-03-21", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Prosperity", "ITENS_LIMPOS": ["Suporte Articulado para TV"]}, {"CNPJ": "53.442.353/0001-08", "RAZÃO SOCIAL": "Inovatech Comercio Venda Online Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / TI e Informática", "PRODUTOS_FORNECIDOS": "LIMPA TELAS 5L", "NCMs": "29051220", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 113.0, "PRIMEIRA_COMPRA": "2025-03-11", "ULTIMA_COMPRA": "2025-03-11", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Inovatech", "ITENS_LIMPOS": ["Limpa-Telas 5L"]}, {"CNPJ": "47.969.713/0001-21", "RAZÃO SOCIAL": "Supera Certificadora Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "E-BOOK INFORMATIVO SOBRE CERTIFICADO DIGITAL", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 96.0, "PRIMEIRA_COMPRA": "2025-03-19", "ULTIMA_COMPRA": "2025-03-19", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Supera Certificadora", "ITENS_LIMPOS": ["E-book: Certificado Digital"]}, {"CNPJ": "64.348.311/0001-29", "RAZÃO SOCIAL": "Confere Materiais Para Construcao Ltda", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Manutenção / Materiais de Construção", "PRODUTOS_FORNECIDOS": "TORNEIRA COZINHA/TANQUE AREJADOR 21CM - 1161", "NCMs": "84818019", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 92.0, "PRIMEIRA_COMPRA": "2025-03-25", "ULTIMA_COMPRA": "2025-03-25", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Confere Materiais", "ITENS_LIMPOS": ["Torneira Cozinha/Tanque"]}, {"CNPJ": "38.341.745/0001-97", "RAZÃO SOCIAL": "Leitura Boa Viagem Livraria E Papelaria Ltda", "UF": "PE", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "SISTEMA AMAZON, O", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 83.82, "PRIMEIRA_COMPRA": "2025-03-07", "ULTIMA_COMPRA": "2025-03-07", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Leitura Boa Viagem", "ITENS_LIMPOS": ["O Sistema Amazon (livro)"]}, {"CNPJ": "72.381.189/0010-01", "RAZÃO SOCIAL": "Dell Computadores Do Brasil Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / TI e Informática", "PRODUTOS_FORNECIDOS": "Mouse Dell WM118 - Bluetooth", "NCMs": "84716053", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 79.0, "PRIMEIRA_COMPRA": "2025-03-24", "ULTIMA_COMPRA": "2025-03-24", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Dell", "ITENS_LIMPOS": ["Mouse Bluetooth Dell WM118"]}, {"CNPJ": "8314507000121", "RAZÃO SOCIAL": "Leitura Alvorada Com. Livros Ltda", "UF": "DF", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Livros e Treinamentos", "PRODUTOS_FORNECIDOS": "PENSE COMO A AMAZON", "NCMs": "49019900", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 71.23, "PRIMEIRA_COMPRA": "2025-03-25", "ULTIMA_COMPRA": "2025-03-25", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Leitura Alvorada", "ITENS_LIMPOS": ["Pense como a Amazon (livro)"]}, {"CNPJ": "23.844.577/0001-85", "RAZÃO SOCIAL": "Mr Lacre Bem Embalagens Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Embalagens", "PRODUTOS_FORNECIDOS": "FITA EMPACOTAMENTO 45MM X 100 MTS LACRE BEM TR (10 ROLOS)", "NCMs": "39191010", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 70.65, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Lacre Bem", "ITENS_LIMPOS": ["Fita de Empacotamento 45mm (10 rolos)"]}, {"CNPJ": "19.964.411/0001-25", "RAZÃO SOCIAL": "Box Da Fruta Comercio De Alimentos Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Alimentação / Refeições e Alimentos", "PRODUTOS_FORNECIDOS": "HAMBURGUER ANGUS COM QUEIJO E ACOMPANHAMENTOS", "NCMs": "19059090", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 67.0, "PRIMEIRA_COMPRA": "2025-03-25", "ULTIMA_COMPRA": "2025-03-25", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Box da Fruta", "ITENS_LIMPOS": ["Hambúrguer Angus com Queijo"]}, {"CNPJ": "41.132.600/0001-90", "RAZÃO SOCIAL": "Charles Alves Dos Santos Limitada", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Tecnologia / Eletroeletrônicos", "PRODUTOS_FORNECIDOS": "Mouse Vertical Ergonomico Luz Led Rgb 6 Botoes", "NCMs": "85121000", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 58.9, "PRIMEIRA_COMPRA": "2025-03-13", "ULTIMA_COMPRA": "2025-03-13", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Charles Santos", "ITENS_LIMPOS": ["Mouse Vertical Ergonômico RGB"]}, {"CNPJ": "50.253.526/0001-51", "RAZÃO SOCIAL": "Armarinhos Gm Ltda", "UF": "SP", "CIDADE": "Uberlandia", "CATEGORIA": "Material de Escritório / Armarinhos", "PRODUTOS_FORNECIDOS": "PASTA POLI DAC C/ELASTICO OFICIO 332mmx232mm PACoTE Com 10 UNIDADES", "NCMs": "42021210", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 44.79, "PRIMEIRA_COMPRA": "2025-03-31", "ULTIMA_COMPRA": "2025-03-31", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Armarinhos GM", "ITENS_LIMPOS": ["Pasta Polionda com Elástico (10un)"]}, {"CNPJ": "19.046.112/0001-01", "RAZÃO SOCIAL": "Vinicius Marquez Dos Santos - Me", "UF": "MG", "CIDADE": "Uberlandia", "CATEGORIA": "Papelaria / Etiquetas", "PRODUTOS_FORNECIDOS": "TAGS 10x15cm", "NCMs": "49111010", "QTD_ITENS_DISTINTOS": 1, "QTD_NFS": 1, "VALOR_TOTAL_R$": 42.9, "PRIMEIRA_COMPRA": "2025-03-11", "ULTIMA_COMPRA": "2025-03-11", "TIPO": "Pessoa Jurídica", "STATUS_SUGERIDO": "Avaliar Exclusão", "ALERTAS": "↓ Compra Única | 🔍 Valor Baixo", "EMAIL": "", "TELEFONE": "", "CONTATO": "", "OBSERVACOES": "", "NOME_FANTASIA": "Vinicius Marquez", "ITENS_LIMPOS": ["Etiquetas Tags 10x15cm"]}];
+const CATS = ["Alimentação / Alimentos Preparados", "Alimentação / Café e Insumos", "Alimentação / Distribuição", "Alimentação / Hotelaria e Refeição", "Alimentação / Panificação", "Alimentação / Refeições e Alimentos", "Alimentação / Refeições e Coffee Break", "Alimentação / Refrigerante", "Brindes / Metais", "Brindes / Presentes e Kits", "Brindes / Troféus e Acrílico", "Embalagens", "Facilities / Decoração e Paisagismo", "Higiene / Perfumaria", "Limpeza / Facilities e Saneamento", "Manutenção / Materiais de Construção", "Material de Escritório / Armarinhos", "Papelaria / Etiquetas", "Papelaria / Livros e Treinamentos", "Saúde / Medicamentos e Higiene", "Tecnologia / E-commerce e Eletrônicos", "Tecnologia / Eletroeletrônicos", "Tecnologia / TI e Informática", "Vestuário / Confecções e Tecidos", "Vestuário / Uniformes e EPIs"];
+
+// Storage
+const KEY = 'snk-forn-v4';
+async function load() {
+  try{ const r=await window.storage.get(KEY); return r?JSON.parse(r.value):null; }catch(e){return null;}
+}
+async function save(d) {
+  try{ await window.storage.set(KEY,JSON.stringify(d)); }catch(e){}
+}
+
+let FORN = [];
+let filtered = [];
+
+async function init() {
+  const stored = await load();
+  if(stored && stored.length >= RAW.length) {
+    FORN = stored;
+  } else {
+    // First load: import NF-e data as "Em análise"
+    FORN = RAW.map((r,i) => ({
+      id: 'nf_' + i,
+      NOME_FANTASIA: r.NOME_FANTASIA,
+      nome: r['RAZÃO SOCIAL'],
+      cnpj: r.CNPJ,
+      cat: r.CATEGORIA,
+      uf: r.UF,
+      cidade: r.CIDADE,
+      itens: r.ITENS_LIMPOS || r.PRODUTOS_FORNECIDOS.split(' | ').slice(0,15),
+      ncms: r.NCMs||'',
+      valor_nfe: r['VALOR_TOTAL_R$'],
+      qtd_itens: r.QTD_ITENS_DISTINTOS,
+      qtd_nfs: r.QTD_NFS,
+      primeira_compra: r.PRIMEIRA_COMPRA,
+      ultima_compra: r.ULTIMA_COMPRA,
+      email: '',
+      tel: '',
+      contato: '',
+      obs: '',
+      status: r.STATUS_SUGERIDO === 'Ativo' ? 'Ativo' : 'Em análise',
+      criado: new Date().toISOString(),
+      origem: 'NF-e Março/2025',
+    }));
+    await save(FORN);
+  }
+  filtered = [...FORN];
+  renderAll();
+}
+
+function renderAll() {
+  renderStats();
+  renderTable(filtered);
+  updateHeader();
+  document.getElementById('sc-all').classList.add('active');
+}
+
+function renderStats() {
+  const at = FORN.filter(f=>f.status==='Ativo').length;
+  const em = FORN.filter(f=>f.status==='Em análise').length;
+  const cats = new Set(FORN.map(f=>f.cat)).size;
+  document.getElementById('s1').textContent = FORN.length;
+  document.getElementById('s2').textContent = at;
+  document.getElementById('s3').textContent = em;
+  document.getElementById('s4').textContent = cats;
+}
+function updateHeader() {
+  document.getElementById('hcount').textContent = FORN.length + ' fornecedores';
+  document.getElementById('tc-base').textContent = FORN.length;
+}
+
+function renderTable(data) {
+  document.getElementById('tRes').textContent = data.length + ' de ' + FORN.length + ' exibidos';
+  const tb = document.getElementById('tbody');
+  if(!data.length) {
+    tb.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--ink2)">📭 Nenhum fornecedor encontrado.</td></tr>`;
+    return;
+  }
+  tb.innerHTML = data.map(f => {
+    const sc = f.status==='Ativo'?'cg':f.status==='Em análise'?'cw':'cb';
+    const allItens = (f.itens||[]).filter(i=>i.trim());
+    const shown = allItens.slice(0,3);
+    const extra = allItens.length - 3;
+    const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+    const prodHTML = '<div class="item-tags prod-cell">' +
+      shown.map(i=>'<div class="itag-line"><span class="itag-bullet"></span><span>'+cap(i)+'</span></div>').join('') +
+      (extra>0?'<span class="itag-more">+ '+extra+' itens</span>':'') +
+      '</div>';
+    return `<tr onclick="openPanel('${f.id}')">
+      <td><div class="cell-fantasia">${f.NOME_FANTASIA||f.nome}</div></td>
+      <td><span style="font-size:11px;color:var(--ink2);font-weight:600">${f.nome}</span><br><span class="cell-cnpj">${f.cnpj}</span></td>
+      <td><span style="font-size:11px;font-weight:600;color:var(--ink2)">${f.cat}</span></td>
+      <td><div style="font-weight:700">${f.uf}</div><div style="font-size:10px;color:var(--ink3)">${f.cidade}</div></td>
+      <td>${prodHTML}</td>
+      <td><span class="chip ${sc}">${f.status==='Ativo'?'● ':f.status==='Em análise'?'◌ ':'○ '}&nbsp;${f.status}</span></td>
+      <td onclick="event.stopPropagation()" style="white-space:nowrap">
+        ${f.status!=='Ativo'?`<button class="btn btn-primary" style="padding:5px 12px;font-size:11px;text-transform:none;letter-spacing:0" onclick="aprovar('${f.id}')">✓ Aprovar</button>`:'<span style="font-size:11px;color:var(--gd);font-weight:700">● Ativo</span>'}
+        <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px;text-transform:none;letter-spacing:0;margin-left:4px" onclick="openPanel('${f.id}')">👁</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterByCard(status) {
+  // toggle: se já está ativo, limpa
+  const sel = document.getElementById('fSt');
+  if(sel.value === status && status !== '') {
+    sel.value = '';
+  } else {
+    sel.value = status;
+  }
+  // update card active states
+  document.querySelectorAll('.stat.clickable').forEach(c => c.classList.remove('active'));
+  if(sel.value === '') document.getElementById('sc-all').classList.add('active');
+  else if(sel.value === 'Ativo') document.getElementById('sc-ativo').classList.add('active');
+  else if(sel.value === 'Em análise') document.getElementById('sc-analise').classList.add('active');
+  filterTable();
+}
+
+function filterTable() {
+  const q = document.getElementById('srchI').value.toLowerCase();
+  const fc = document.getElementById('fCat').value;
+  const fu = document.getElementById('fUF').value;
+  const fs = document.getElementById('fSt').value;
+  // sync card highlight with select
+  document.querySelectorAll('.stat.clickable').forEach(c => c.classList.remove('active'));
+  if(!fs) document.getElementById('sc-all').classList.add('active');
+  else if(fs==='Ativo') document.getElementById('sc-ativo').classList.add('active');
+  else if(fs==='Em análise') document.getElementById('sc-analise').classList.add('active');
+  filtered = FORN.filter(f =>
+    (!q || (f.NOME_FANTASIA||'').toLowerCase().includes(q) || f.nome.toLowerCase().includes(q) ||
+     (f.cnpj||'').includes(q) || (f.cidade||'').toLowerCase().includes(q) ||
+     (f.itens||[]).some(i=>i.toLowerCase().includes(q)) ||
+     (f.cat||'').toLowerCase().includes(q) ||
+     (f.ncms||'').includes(q)) &&
+    (!fc || f.cat===fc) && (!fu || f.uf===fu) && (!fs || f.status===fs)
+  );
+  renderTable(filtered);
+}
+
+function openPanel(id) {
+  const f = FORN.find(x=>x.id===id); if(!f)return;
+  const brl = v => 'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
+  const sc = f.status==='Ativo'?'cg':f.status==='Em análise'?'cw':'cb';
+  document.getElementById('ph-f').textContent = f.NOME_FANTASIA || f.nome;
+  document.getElementById('ph-rs').textContent = f.NOME_FANTASIA ? f.nome : '';
+  document.getElementById('ph-c').textContent = 'CNPJ: ' + f.cnpj;
+  const prods = (f.itens||[]).map(p=>`• ${p}`).join('\n');
+  document.getElementById('pb').innerHTML = `
+    <div class="ps">
+      <div class="ps-t">Situação</div>
+      <div class="pr"><span class="k">Status</span><span class="chip ${sc}">${f.status}</span></div>
+      <div class="pr"><span class="k">Origem</span><span class="v">${f.origem||'Cadastro manual'}</span></div>
+      ${f.criado?`<div class="pr"><span class="k">Cadastrado em</span><span class="v">${new Date(f.criado).toLocaleDateString('pt-BR')}</span></div>`:''}
+    </div>
+    <div class="ps">
+      <div class="ps-t">Localidade</div>
+      <div class="pr"><span class="k">Estado</span><span class="v">${f.uf}</span></div>
+      <div class="pr"><span class="k">Cidade</span><span class="v">${f.cidade}</span></div>
+    </div>
+    <div class="ps">
+      <div class="ps-t">Histórico NF-e</div>
+      <div class="pr"><span class="k">Categoria</span><span class="v">${f.cat}</span></div>
+      <div class="pr"><span class="k">Itens distintos</span><span class="v">${f.qtd_itens||f.itens?.length||'—'}</span></div>
+      <div class="pr"><span class="k">NFs emitidas</span><span class="v">${f.qtd_nfs||'—'}</span></div>
+      <div class="pr"><span class="k">Valor total NF-e</span><span class="v" style="color:var(--gd)">${brl(f.valor_nfe||0)}</span></div>
+      <div class="pr"><span class="k">Primeira compra</span><span class="v">${f.primeira_compra||'—'}</span></div>
+      <div class="pr"><span class="k">Última compra</span><span class="v">${f.ultima_compra||'—'}</span></div>
+    </div>
+    ${(f.email||f.tel||f.contato)?`
+    <div class="ps">
+      <div class="ps-t">Contato</div>
+      ${f.email?`<div class="pr"><span class="k">E-mail</span><span class="v" style="font-size:11px">${f.email}</span></div>`:''}
+      ${f.tel?`<div class="pr"><span class="k">Telefone</span><span class="v">${f.tel}</span></div>`:''}
+      ${f.contato?`<div class="pr"><span class="k">Responsável</span><span class="v">${f.contato}</span></div>`:''}
+      ${f.resp_sup?`<div class="pr"><span class="k">Resp. Suprimentos</span><span class="v" style="color:var(--gd);font-weight:800">${f.resp_sup}</span></div>`:''}
+    </div>`:'<div class="ps"><div class="ps-t">Contato</div><div style="font-size:12px;color:var(--ink3);font-style:italic">Não informado — solicite via formulário ao fornecedor</div></div>'}
+    <div class="ps">
+      <div class="ps-t">Produtos / Serviços</div>
+      <div class="prod-list">${prods}</div>
+    </div>
+    ${f.obs?`<div class="ps"><div class="ps-t">Observações</div><div style="font-size:12px;color:var(--ink2);line-height:1.6">${f.obs}</div></div>`:''}
+    <div class="panel-actions">
+      ${f.status!=='Ativo'?`<button class="btn btn-primary" style="flex:1;justify-content:center;font-size:12px" onclick="aprovar('${f.id}')">✓ Aprovar</button>`:''}
+      <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:12px" onclick="editar('${f.id}')">✎ Editar</button>
+      <button class="btn btn-ghost" style="font-size:12px;color:var(--red);border-color:rgba(192,57,43,.25)" onclick="excluir('${f.id}')">✕</button>
+    </div>`;
+  document.getElementById('pOv').classList.add('open');
+  document.getElementById('sPanel').classList.add('open');
+}
+function closePanel() {
+  document.getElementById('pOv').classList.remove('open');
+  document.getElementById('sPanel').classList.remove('open');
+}
+
+async function aprovar(id) {
+  const f=FORN.find(x=>x.id===id); if(!f)return;
+  f.status='Ativo'; await save(FORN); renderAll(); closePanel(); toast('✓ Fornecedor aprovado!');
+}
+async function excluir(id) {
+  if(!confirm('Remover este fornecedor?'))return;
+  FORN=FORN.filter(x=>x.id!==id); filtered=filtered.filter(x=>x.id!==id);
+  await save(FORN); renderAll(); closePanel(); toast('Fornecedor removido.');
+}
+function editar(id) {
+  const f=FORN.find(x=>x.id===id); if(!f)return;
+  closePanel(); showTab('inclusao',document.querySelectorAll('.ntab')[1]);
+  setTimeout(()=>{
+    document.getElementById('i_cnpj').value=f.cnpj||'';
+    document.getElementById('i_fantasia').value=f.NOME_FANTASIA||'';
+    document.getElementById('i_nome').value=f.nome||'';
+    document.getElementById('i_itens').value=(f.itens||[]).join(', ');
+    document.getElementById('i_cat').value=f.cat||'';
+    document.getElementById('i_uf').value=f.uf||'SP';
+    document.getElementById('i_cidade').value=f.cidade||'';
+    document.getElementById('i_email').value=f.email||'';
+    document.getElementById('i_tel').value=f.tel||'';
+    document.getElementById('i_contato').value=f.contato||'';
+    document.getElementById('i_resp_sup').value=f.resp_sup||'';
+    document.getElementById('i_obs').value=f.obs||'';
+    window._editId=id;
+  },100);
+}
+
+function maskCNPJ(el){
+  let v=el.value.replace(/\D/g,'').slice(0,14);
+  if(v.length>12)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/,'$1.$2.$3/$4-$5');
+  else if(v.length>8)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/,'$1.$2.$3/$4');
+  else if(v.length>5)v=v.replace(/^(\d{2})(\d{3})(\d{0,3})/,'$1.$2.$3');
+  else if(v.length>2)v=v.replace(/^(\d{2})(\d{0,3})/,'$1.$2');
+  el.value=v;
+}
+async function autofill(){
+  const cnpj=document.getElementById('i_cnpj').value.replace(/\D/g,'');
+  const msg=document.getElementById('cnpjMsg');
+  if(cnpj.length<14){msg.textContent='⚠ CNPJ incompleto.';msg.style.color='var(--warn)';return;}
+  msg.textContent='⏳ Consultando...';msg.style.color='var(--ink2)';
+  try{
+    const r=await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+    const d=await r.json();
+    document.getElementById('i_fantasia').value=d.nome_fantasia||'';
+    document.getElementById('i_nome').value=d.razao_social||'';
+    document.getElementById('i_cidade').value=d.municipio||'';
+    if(d.uf)document.getElementById('i_uf').value=d.uf;
+    if(d.email)document.getElementById('i_email').value=d.email;
+    if(d.ddd_telefone_1)document.getElementById('i_tel').value='('+d.ddd_telefone_1+') '+(d.telefone_1||'');
+    msg.textContent='✓ Dados preenchidos via Receita Federal';msg.style.color='var(--gd)';
+  }catch(e){msg.textContent='Não encontrado. Preencha manualmente.';msg.style.color='var(--warn)';}
+}
+function clearForm(){
+  ['i_cnpj','i_fantasia','i_nome','i_itens','i_cat','i_cidade','i_email','i_tel','i_contato','i_resp_sup','i_obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('i_uf').value='SP';
+  document.getElementById('cnpjMsg').textContent='';
+  window._editId=null;
+}
+async function salvar(){
+  const nome=document.getElementById('i_nome').value.trim();
+  const cnpj=document.getElementById('i_cnpj').value.trim();
+  const itensRaw=document.getElementById('i_itens').value.trim();
+  const cat=document.getElementById('i_cat').value.trim();
+  const uf=document.getElementById('i_uf').value;
+  const cidade=document.getElementById('i_cidade').value.trim();
+  const email=document.getElementById('i_email').value.trim();
+  const resp_sup=document.getElementById('i_resp_sup').value.trim();
+  if(!nome||!cnpj||!itensRaw||!cat||!uf||!cidade||!email||!resp_sup){toast('⚠ Preencha todos os campos obrigatórios, incluindo Responsável Suprimentos','var(--warn)');return;}
+  if(window._editId){
+    const idx=FORN.findIndex(x=>x.id===window._editId);
+    if(idx>=0) FORN[idx]={...FORN[idx],
+      NOME_FANTASIA:document.getElementById('i_fantasia').value.trim()||nome,
+      nome,cnpj,itens:itensRaw.split(',').map(s=>s.trim()).filter(Boolean),
+      cat,uf,cidade,email,
+      tel:document.getElementById('i_tel').value.trim(),
+      contato:document.getElementById('i_contato').value.trim(),
+      obs:document.getElementById('i_obs').value.trim()
+    };
+    window._editId=null; toast('✓ Fornecedor atualizado!');
+  }else{
+    FORN.push({
+      id:'f'+Date.now(),
+      NOME_FANTASIA:document.getElementById('i_fantasia').value.trim()||nome,
+      nome,cnpj,itens:itensRaw.split(',').map(s=>s.trim()).filter(Boolean),
+      cat,uf,cidade,email,
+      tel:document.getElementById('i_tel').value.trim(),
+      contato:document.getElementById('i_contato').value.trim(),
+      resp_sup:document.getElementById('i_resp_sup').value.trim(),
+      obs:document.getElementById('i_obs').value.trim(),
+      valor_nfe:0,qtd_itens:itensRaw.split(',').length,qtd_nfs:0,
+      primeira_compra:'',ultima_compra:'',
+      status:'Em análise',criado:new Date().toISOString(),origem:'Cadastro manual'
+    });
+    toast('✓ Fornecedor salvo com sucesso!');
+  }
+  await save(FORN); clearForm(); filtered=[...FORN]; renderAll();
+  showTab('base',document.querySelector('.ntab'));
+}
+
+function showTab(tab,el){
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  if(el)el.classList.add('active');
+  closePanel();
+}
+
+async function runAI(){
+  const q=document.getElementById('aiQ').value.trim(); if(!q)return;
+  const box=document.getElementById('aiRes');
+  box.classList.remove('hidden'); box.className='ai-res';
+  box.textContent='✦ Consultando a base...';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`Você é um assistente de suprimentos da Sankhya. Base de fornecedores (JSON): ${JSON.stringify(FORN.slice(0,64))}. Responda em português, de forma direta. Liste fornecedores encontrados com nome fantasia, categoria, cidade e UF. Não invente dados.`,
+        messages:[{role:'user',content:q}]
+      })
+    });
+    const d=await r.json();
+    box.textContent=d.content?.find(b=>b.type==='text')?.text||'Sem resposta.';
+  }catch(e){box.textContent='Erro ao consultar IA.';}
+}
+
+function exportCSV(){
+  const cols=['NOME_FANTASIA','RAZÃO SOCIAL','CNPJ','UF','CIDADE','CATEGORIA','PRODUTOS','QTD_ITENS','QTD_NFS','VALOR_NFE','ULTIMA_COMPRA','STATUS','EMAIL','TELEFONE','CONTATO','RESP_SUPRIMENTOS','ORIGEM'];
+  const rows=[cols.join(';')];
+  filtered.forEach(f=>rows.push([
+    f.NOME_FANTASIA||'',f.nome,f.cnpj,f.uf,f.cidade,f.cat,
+    (f.itens||[]).join('|'),f.qtd_itens||'',f.qtd_nfs||'',
+    f.valor_nfe||'',f.ultima_compra||'',f.status,
+    f.email||'',f.tel||'',f.contato||'',f.resp_sup||'',f.origem||''
+  ].map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(';')));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.join('\n'));
+  a.download=`fornecedores_sankhya_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); toast('⬇ CSV exportado!');
+}
+
+function toast(msg,color='var(--gd)'){
+  const t=document.createElement('div');
+  t.className='toast';t.style.borderLeftColor=color;t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+init();
+</script>
+</body>
+</html>
