@@ -62,14 +62,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--navy)
 .stat-hint{font-size:10px;color:var(--ink3);margin-top:5px;font-weight:600;}
 
 /* AI BAR */
-.ai-bar{background:var(--navy);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:10px;align-items:center;}
-.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite;box-shadow:0 0 0 0 rgba(102,204,102,.5);}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(102,204,102,.4)}70%{box-shadow:0 0 0 8px rgba(102,204,102,0)}100%{box-shadow:0 0 0 0 rgba(102,204,102,0)}}
-.ai-lbl{font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap;}
-.ai-inp{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(102,204,102,.25);border-radius:7px;padding:8px 13px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:#fff;outline:none;}
-.ai-inp::placeholder{color:rgba(255,255,255,.3);}
-.ai-inp:focus{border-color:var(--green);}
-.ai-res{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:8px;padding:13px 16px;font-size:13px;line-height:1.75;color:var(--navy);white-space:pre-wrap;margin-bottom:14px;}
 
 /* TOOLBAR */
 .toolbar{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
@@ -178,15 +170,6 @@ tbody td{padding:11px 13px;vertical-align:middle;font-size:12px;}
     <div class="stat s3 clickable" id="sc-analise" onclick="filterByCard('Em análise')"><div class="stat-icon">⏳</div><div class="stat-num" id="s3" style="color:var(--warn)">0</div><div class="stat-label">Em Análise</div><div class="stat-hint">clique para filtrar</div></div>
     <div class="stat s4"><div class="stat-icon">🗂️</div><div class="stat-num" id="s4" style="color:var(--navy)">0</div><div class="stat-label">Categorias</div></div>
   </div>
-
-  <!-- AI -->
-  <div class="ai-bar">
-    <div class="ai-dot"></div>
-    <span class="ai-lbl">IA ✦</span>
-    <input class="ai-inp" id="aiQ" placeholder='Pergunte em linguagem natural — ex: "fornecedores de TI" ou "quem fornece café?"' onkeydown="if(event.key==='Enter')runAI()">
-    <button class="btn btn-primary" style="padding:8px 14px;font-size:12px" onclick="runAI()">Buscar</button>
-  </div>
-  <div class="ai-res hidden" id="aiRes"></div>
 
   <!-- Toolbar -->
   <div class="toolbar">
@@ -342,10 +325,7 @@ tbody td{padding:11px 13px;vertical-align:middle;font-size:12px;}
           <input class="fsel" id="i_resp_sup" placeholder="Nome do responsável interno pela inclusão" style="border-radius:7px;padding:8px 12px">
           <div style="font-size:11px;color:var(--ink3)">Quem está solicitando a inclusão deste fornecedor</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Prazo (dias úteis)</div>
-          <input class="fsel" id="i_prazo" type="number" min="1" placeholder="Ex: 5" style="border-radius:7px;padding:8px 12px">
-        </div>
+
         <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
           <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink2)">Observações</div>
           <textarea class="fsel" id="i_obs" rows="3" placeholder="Certificações, condições especiais, observações..." style="border-radius:7px;padding:8px 12px;resize:vertical"></textarea>
@@ -508,6 +488,24 @@ async function init() {
   }
   filtered = [...FORN];
   renderAll();
+  if (!isGASConfigured()) showSyncStatus('local');
+
+  // Atualiza a base a cada 30s — todos os usuários veem mudanças em tempo real
+  if (isGASConfigured()) {
+    setInterval(async () => {
+      try {
+        const r = await fetch(GAS_URL + '?action=read');
+        const d = await r.json();
+        if (d.status === 'ok' && d.data && d.data.length !== FORN.length) {
+          FORN = d.data;
+          filtered = [...FORN];
+          renderAll();
+          showSyncStatus('ok');
+          toast('🔄 Base atualizada!');
+        }
+      } catch(e) {}
+    }, 30000);
+  }
 }
 
 function renderAll() {
@@ -764,26 +762,6 @@ function showTab(tab,el){
   closePanel();
 }
 
-async function runAI(){
-  const q=document.getElementById('aiQ').value.trim(); if(!q)return;
-  const box=document.getElementById('aiRes');
-  box.classList.remove('hidden'); box.className='ai-res loading';
-  box.textContent='✦ Consultando base e mercado...';
-
-  // Proxy via GAS (resolve CORS do GitHub Pages)
-  if(isGASConfigured()){
-    try{
-      const r=await fetch(GAS_URL,{
-        method:'POST',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'ai_search',query:q})
-      });
-      const d=await r.json();
-      if(d.status==='ok'&&d.result){
-        box.className='ai-res';
-        box.textContent=d.result;
-        return;
-      }
     }catch(e){console.warn('GAS AI proxy falhou',e);}
   }
 
