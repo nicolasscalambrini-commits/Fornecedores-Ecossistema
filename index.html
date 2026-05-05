@@ -767,20 +767,55 @@ function showTab(tab,el){
 async function runAI(){
   const q=document.getElementById('aiQ').value.trim(); if(!q)return;
   const box=document.getElementById('aiRes');
-  box.classList.remove('hidden'); box.className='ai-res';
-  box.textContent='✦ Consultando a base...';
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`Você é um assistente de suprimentos da Sankhya. Base de fornecedores (JSON): ${JSON.stringify(FORN.slice(0,64))}. Responda em português, de forma direta. Liste fornecedores encontrados com nome fantasia, categoria, cidade e UF. Não invente dados.`,
-        messages:[{role:'user',content:q}]
-      })
+  box.classList.remove('hidden'); box.className='ai-res loading';
+  box.textContent='✦ Consultando base e mercado...';
+
+  // Proxy via GAS (resolve CORS do GitHub Pages)
+  if(isGASConfigured()){
+    try{
+      const r=await fetch(GAS_URL,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'ai_search',query:q})
+      });
+      const d=await r.json();
+      if(d.status==='ok'&&d.result){
+        box.className='ai-res';
+        box.textContent=d.result;
+        return;
+      }
+    }catch(e){console.warn('GAS AI proxy falhou',e);}
+  }
+
+  // Fallback local no browser
+  const ql=q.toLowerCase();
+  const found=FORN.filter(f=>{
+    const s=[f.NOME_FANTASIA||f.nome||'',f.cat||'',f.cidade||'',f.uf||'',...(f.itens||[])].join(' ').toLowerCase();
+    return s.includes(ql);
+  });
+  box.className='ai-res';
+  if(found.length>0){
+    let txt=`✅ Na sua base (${found.length} encontrado${found.length>1?'s':''}):
+
+`;
+    found.slice(0,5).forEach(f=>{
+      const itens=(f.itens||[]).slice(0,3).join(', ');
+      txt+=`• ${f.NOME_FANTASIA||f.nome} — ${f.cat} · ${f.cidade}/${f.uf} · ${f.status}
+`;
+      if(itens)txt+=`  Fornece: ${itens}
+`;
     });
-    const d=await r.json();
-    box.textContent=d.content?.find(b=>b.type==='text')?.text||'Sem resposta.';
-  }catch(e){box.textContent='Erro ao consultar IA.';}
+    if(found.length>5)txt+=`
+  ... e mais ${found.length-5} fornecedor(es).`;
+    box.textContent=txt;
+  }else{
+    box.textContent=`Nenhum fornecedor na base para "${q}".
+
+🔍 Sugestões do mercado:
+• Kompass Brasil — br.kompass.com
+• BuscaEmpresa — buscaempresa.com.br
+• Mercado Livre Empresas — meunegocios.mercadolivre.com.br`;
+  }
 }
 
 function exportCSV(){
