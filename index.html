@@ -381,21 +381,17 @@ function toForn(r) {
 
 // ── INIT ─────────────────────────────────────────────────
 (function init() {
-  // Load from localStorage if available and newer
+  // 1. Show inline data instantly (no loading screen)
   try {
     const cached = JSON.parse(localStorage.getItem(LS) || 'null');
-    if (cached && cached.length > D.length) {
-      FORN = cached;
-    } else {
-      FORN = D.map(toForn);
-    }
+    FORN = (cached && cached.length >= D.length) ? cached : D.map(toForn);
   } catch(e) {
     FORN = D.map(toForn);
   }
   filtered = [...FORN];
   renderAll();
-  setSt('ok');
-  // Try GAS for newer manual entries
+  setSt('loading');
+  // 2. ALWAYS fetch from GAS — it's the source of truth
   fetchGAS();
 })();
 
@@ -409,21 +405,27 @@ function setSt(s) {
 async function fetchGAS() {
   if (!GAS.startsWith('https')) return;
   try {
-    setSt('loading');
-    const r = await fetch(GAS + '?action=read');
+    const r = await fetch(GAS + '?action=read&t=' + Date.now());
     const d = await r.json();
-    if (d.status==='ok' && d.data && d.data.length > FORN.length) {
-      FORN = d.data;
-      filtered = [...FORN];
-      localStorage.setItem(LS, JSON.stringify(FORN));
-      renderAll(); setSt('ok');
-      toast('🔄 Base atualizada! (' + FORN.length + ' fornecedores)');
+    if (d.status==='ok' && d.data && d.data.length > 0) {
+      const gasCount = d.data.length;
+      const localCount = FORN.length;
+      if (gasCount !== localCount) {
+        // GAS differs from local — GAS wins (it's the shared source of truth)
+        FORN = d.data;
+        filtered = [...FORN];
+        localStorage.setItem(LS, JSON.stringify(FORN));
+        renderAll(); setSt('ok');
+        if (gasCount > localCount) toast('🔄 Base atualizada! (' + gasCount + ' fornecedores)');
+      } else {
+        setSt('ok');
+      }
+    } else if (d.status==='ok' && (!d.data || d.data.length === 0)) {
+      // GAS is empty — push local data
+      setSt('saving');
+      saveToGAS(FORN);
     } else {
       setSt('ok');
-      // Push to GAS if local is bigger
-      if (FORN.length > (d.data||[]).length && FORN.length > 100) {
-        saveToGAS(FORN);
-      }
     }
   } catch(e) { setSt('error'); }
 }
@@ -655,7 +657,7 @@ function toast(msg,color='var(--gd)'){const t=document.createElement('div');t.cl
 document.getElementById('sc0').classList.add('on');
 
 // ── POLL 60s ─────────────────────────────────────────────
-setInterval(fetchGAS, 60000);
+setInterval(fetchGAS, 30000); // Poll every 30s — GAS always wins
 </script>
 </body>
 </html>
